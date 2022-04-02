@@ -5,9 +5,11 @@ import data.models.RegistrationAndAuthentication.RegisterANewUserRequest;
 import data.models.RegistrationAndAuthentication.RegisterANewUserResponse;
 import data.models.privateTest.CreateCrocodileRequest;
 import data.models.publicTest.CrocodileResponse;
+import data.provider.CrocodileProvider;
 import jdk.jfr.Description;
 import org.apache.commons.lang3.RandomUtils;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import test.asserts.CrocodileAsserts;
 import test.common.TestBase;
@@ -19,14 +21,22 @@ public class CrocodileTests extends TestBase {
 
     public CrocodileAsserts crocodileAsserts = new CrocodileAsserts();
 
+    CreateCrocodileRequest createCrocodileRequest;
+    //String idOfCreatedCrocodile;
+
+    @BeforeMethod
+    public void prepareTestData(){
+        createCrocodileRequest = CrocodileProvider.prepareCrocodileRequest();
+        //idOfCreatedCrocodile = CrocodilesAPI.createNewCrocodile(createCrocodileRequest).getId();
+    }
     @Test
     @Description("verify crocodile is created")
     public void createCrocodileTest() {
-        CreateCrocodileRequest createCrocodileRequest = new CreateCrocodileRequest("New crocodile created1", "M", "2021-03-14");
+        //CreateCrocodileRequest createCrocodileRequest = new CreateCrocodileRequest("New crocodile created1", "M", "2021-03-14");
 
         CrocodileResponse createCrocodileResponse = CrocodilesAPI.createNewCrocodile(accessToken, createCrocodileRequest);
 
-        crocodileAsserts.assertCreateNewCrocodile(createCrocodileResponse, createCrocodileRequest);
+        crocodileAsserts.assertCreateNewCrocodile(createCrocodileResponse, createCrocodileRequest, accessToken);
     }
 
 

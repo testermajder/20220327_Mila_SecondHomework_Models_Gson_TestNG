@@ -2,6 +2,7 @@ package calls;
 
 import common.GsonFunctions;
 import common.RestAssuredFunctions;
+import constants.ApiEndpoints;
 import data.models.RegistrationAndAuthentication.RegisterANewUserRequest;
 import data.models.RegistrationAndAuthentication.RegisterANewUserResponse;
 import data.models.privateTest.CreateCrocodileRequest;
@@ -24,41 +25,40 @@ import static io.restassured.RestAssured.given;
 
 public class CrocodilesAPI {
 
-    //post requests:
     public static LoginResponse login(LoginRequest loginRequest) {
-        return GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.post("auth/token/login/", loginRequest), LoginResponse.class);
+        return GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.post(ApiEndpoints.LOGIN, loginRequest), LoginResponse.class);
     }
 
     public static CrocodileResponse createNewCrocodile(String accessToken, CreateCrocodileRequest createCrocodileRequest) {
-        return GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.post("my/crocodiles/", accessToken, createCrocodileRequest), CrocodileResponse.class);
+        return GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.post(ApiEndpoints.CROCODILES, accessToken, createCrocodileRequest), CrocodileResponse.class);
     }
 
     public static RegisterANewUserResponse registerNewUser(RegisterANewUserRequest registerANewUserRequest){
-        return GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.post("user/register/", registerANewUserRequest), RegisterANewUserResponse.class);
+        return GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.post(ApiEndpoints.REGISTER, registerANewUserRequest), RegisterANewUserResponse.class);
     }
 
     public static CrocodileResponse[] getPublicCrocodileResponse() {
-        return GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.get("public/crocodiles/"), CrocodileResponse[].class);
+        return GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.get(ApiEndpoints.PUBLIC_CROCODILES), CrocodileResponse[].class);
     }
 
     public static CrocodileResponse getASinglePublicCrocodileResponse(){
-        return  GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.get("/public/crocodiles/1/"),  CrocodileResponse.class);
+        return  GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.get(ApiEndpoints.PUBLIC_CROCODILES +"/1"),  CrocodileResponse.class);
     }
 
     public static CrocodileResponse getCrocodileById(int id, String accessToken){
-        return  GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.get("/my/crocodiles/" + id + "/", accessToken),  CrocodileResponse.class);
+        return  GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.get(ApiEndpoints.CROCODILES + id + "/", accessToken),  CrocodileResponse.class);
     }
 
     public static CrocodileResponse[] getMyCrocodilesResponses(String accessToken){
-        return GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.get("/my/crocodiles/", accessToken), CrocodileResponse[].class);
+        return GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.get(ApiEndpoints.CROCODILES, accessToken), CrocodileResponse[].class);
     }
 
     public static CrocodileResponse getMyCrocodileResponse(String accessToken){
-        return  GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.get("/my/crocodiles/" + GetId(accessToken),accessToken),  CrocodileResponse.class);
+        return  GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.get(ApiEndpoints.CROCODILES + GetId(accessToken),accessToken),  CrocodileResponse.class);
     }
 
     public static String GetId(String accessToken) {
-        Response responseAllCrocodiles = RestAssuredFunctions.get("my/crocodiles/" , accessToken);
+        Response responseAllCrocodiles = RestAssuredFunctions.get(ApiEndpoints.CROCODILES , accessToken);
         String responseAsString = responseAllCrocodiles.body().asString();
         String id = responseAsString.substring(responseAsString.indexOf("{\"id\":") + 6, responseAsString.indexOf(",\""));
         return id;
@@ -66,18 +66,16 @@ public class CrocodilesAPI {
 
 
     public static CrocodileResponse deleteMyCrocodileResponseById(String accessToken, int id) {
-        CrocodileResponse crocodileResponse = GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.delete("/my/crocodiles/" + id + "/",accessToken),  CrocodileResponse.class);
+        CrocodileResponse crocodileResponse = GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.delete(ApiEndpoints.CROCODILES + id + "/",accessToken),  CrocodileResponse.class);
         return crocodileResponse;
     }
 
-
-
     public static CrocodileResponse updateMyCrocodileResponsePatch(String accessToken, int id,  CrocodileResponse crocodileResponse) {
-        return GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.patch("/my/crocodiles/" + id +"/", accessToken, crocodileResponse), CrocodileResponse.class);
+        return GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.patch(ApiEndpoints.CROCODILES+ id +"/", accessToken, crocodileResponse), CrocodileResponse.class);
     }
 
     public static CrocodileResponse updateMyCrocodileResponsePut(String accessToken,  int id,  CrocodileResponse crocodileResponse) {
-        return GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.put("/my/crocodiles/" + id +"/", accessToken, crocodileResponse), CrocodileResponse.class);
+        return GsonFunctions.parseSuccessResponseToModel(RestAssuredFunctions.put(ApiEndpoints.CROCODILES + id +"/", accessToken, crocodileResponse), CrocodileResponse.class);
     }
 
     public static int YearsPassed(LocalDate date) throws ParseException {
